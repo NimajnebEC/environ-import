@@ -4,11 +4,11 @@ Provides utilites for the package's main entrypoints.
 
 import logging
 from os import environ
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 
 from environ_import.util import load_and_generate, merge_unique
 
-__all__ = ("environ", "List", "initialise", "add_environ")
+__all__ = ("environ", "Optional", "List", "initialise", "add_environ")
 
 _log = logging.getLogger("environ_import")
 

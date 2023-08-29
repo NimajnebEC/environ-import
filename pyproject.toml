@@ -8,6 +8,7 @@ license = "MIT"
 packages = [
     { include = "environ_import", from = "src" },
     { include = "environ", from = "src" },
+    { include = "envnull", from = "src" },
 ]
 
 [tool.poetry.dependencies]

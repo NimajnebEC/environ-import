@@ -1,0 +1,7 @@
+from typing import List, Optional
+
+def __getattr__(name: Optional[str]) -> str: ...
+def __dir__() -> List[str]: ...
+
+# Generated environment variable definitions
+${%s: Optional[str]}
