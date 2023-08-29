@@ -2,16 +2,23 @@
 Provides utilites for the package's main entrypoints.
 """
 
-from itertools import chain
+import logging
 from os import environ
 from typing import Iterable, List
 
-__all__ = ["environ", "List", "initialise", "add_environ"]
+from environ_import.util import load_and_generate, merge_unique
+
+__all__ = ("environ", "List", "initialise", "add_environ")
+
+_log = logging.getLogger("environ_import")
 
 
 def initialise() -> None:
     """Perform all module initialisation actions."""
-    # None yet...
+    try:
+        load_and_generate()
+    except Exception as e:
+        _log.error("Error while initialising: %s", e)
 
 
 def add_environ(globals: Iterable[str]) -> List[str]:
@@ -28,19 +35,3 @@ def add_environ(globals: Iterable[str]) -> List[str]:
         The merged list.
     """
     return merge_unique(environ.keys(), globals)
-
-
-def merge_unique(*iters: Iterable[str]) -> List[str]:
-    """Merges the provided iterables into a single list, ignoring duplicates.
-
-    Parameters
-    ----------
-    *iters : Iterable
-        The iterables to merge.
-
-    Returns
-    -------
-    List[str]
-        The merged list.
-    """
-    return list(set(chain(*iters)))
