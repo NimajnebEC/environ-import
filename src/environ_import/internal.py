@@ -11,10 +11,18 @@ from environ_import.util import load_and_generate, merge_unique
 __all__ = ("environ", "Optional", "List", "initialise", "add_environ")
 
 _log = logging.getLogger("environ_import")
+_initialised = False
 
 
 def initialise() -> None:
     """Perform all module initialisation actions."""
+    # Ensure this is the first initialisation
+    global _initialised
+    if _initialised:
+        return
+    _initialised = True
+
+    # Load and generate, catching any errors
     try:
         load_and_generate()
     except Exception as e:
