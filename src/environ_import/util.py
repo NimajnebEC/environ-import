@@ -10,7 +10,7 @@ from dotenv import dotenv_values, find_dotenv
 STUB_EXTENSION = ".pyi"
 RE_TEMPLATE = re.compile(r"\${(.+)}")
 
-__all__ = ("merge_unique", "find_dotenvs")
+__all__ = ("load_and_generate", "merge_unique")
 
 _log = logging.getLogger("environ_import")
 
@@ -25,8 +25,12 @@ def load_and_generate() -> None:
         if k not in os.environ and v is not None:
             os.environ[k] = v
 
+    # Merge with .env.example for typing
+    example = parse_dotenv(find_dotenv(".env.example")).keys()
+    keys = merge_unique(vars.keys(), example)
+
     # Generate Stubs
-    generate_stubs(vars.keys())
+    generate_stubs(keys)
 
 
 def parse_dotenv(path: str) -> Dict[str, Optional[str]]:
