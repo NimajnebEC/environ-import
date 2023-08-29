@@ -46,6 +46,10 @@ def parse_dotenv(path: str) -> Dict[str, Optional[str]]:
     Dict[str, Optional[str]]
         The parsed dotenv file as a dictionary.
     """
+    if path == "":
+        return {}
+
+    _log.debug("Parsing dotenv at '%s'", path)
 
     try:
         return dotenv_values(path)
