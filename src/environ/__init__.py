@@ -24,7 +24,7 @@ def __getattr__(name: str) -> str:
     try:
         return _internal.environ[name]
     except KeyError:
-        raise AttributeError(f"no environment variable '{name}'")
+        raise AttributeError(f"required environment variable '{name}' not found")
 
 
 def __dir__() -> _internal.List[str]:
