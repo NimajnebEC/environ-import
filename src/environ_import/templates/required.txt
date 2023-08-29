@@ -1,7 +1,6 @@
 from typing import List
 
 def __getattr__(name: str) -> str: ...
-def __dir__() -> List[str]: ...
 
 # Generated environment variable definitions
 ${%s: str}
