@@ -35,15 +35,32 @@ parser.add_argument(
     help="set log level to DEBUG",
 )
 
+# Parse CLI Arguments
 args = parser.parse_args()
 
-logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
+# Setup Logging
+handler = logging.StreamHandler()
+handler.setFormatter(
+    logging.Formatter(
+        "[{asctime}] [{levelname:<8}] {name}: {message}",
+        "%Y-%m-%d %H:%M:%S",
+        style="{",
+    )
+)
+
+logging.basicConfig(
+    level=logging.DEBUG if args.verbose else logging.INFO,
+    handlers=(handler,),
+)
+
+# Disable initialisation when importing entrypoints
 internal._should_initialise = False
 
+# Initialise stubs with current keys
 files: Set[DatedFile] = get_dated_dotenvs()
+generate_files(files)
 
 if args.once:
-    generate_files(files)
     _log.info("STUB FILES GENERATED!")
 else:
     with contextlib.suppress(KeyboardInterrupt):
