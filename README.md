@@ -22,6 +22,8 @@ import environ
 print(environ.PATH)
 ```
 
+Environ Import automatically loads `.env` files using [python-dotenv](https://github.com/theskumar/python-dotenv).
+
 Import from the `envnull` module to avoid raising `AttributeError` when importing an undefined environment variable.
 
 ## Dynamic Typing
