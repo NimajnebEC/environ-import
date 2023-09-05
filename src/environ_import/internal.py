@@ -11,16 +11,16 @@ from environ_import.util import load_and_generate, merge_unique
 __all__ = ("environ", "Optional", "List", "initialise", "add_environ")
 
 _log = logging.getLogger("environ_import")
-_initialised = False
+_should_initialise = True
 
 
 def initialise() -> None:
     """Perform all module initialisation actions."""
     # Ensure this is the first initialisation
-    global _initialised
-    if _initialised:
+    global _should_initialise
+    if not _should_initialise:
         return
-    _initialised = True
+    _should_initialise = False
 
     # Load and generate, catching any errors
     try:

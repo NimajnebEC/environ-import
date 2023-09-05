@@ -11,7 +11,13 @@ STUB_EXTENSION = ".pyi"
 EXAMPLE_DOTENV = ".env.example"
 RE_TEMPLATE = re.compile(r"\${(.+)}")
 
-__all__ = ("load_and_generate", "merge_unique", "generate_stubs", "find_dotenvs")
+__all__ = (
+    "load_and_generate",
+    "generate_stubs",
+    "parse_dotenvs",
+    "merge_unique",
+    "find_dotenvs",
+)
 
 _log = logging.getLogger("environ_import")
 

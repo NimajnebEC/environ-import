@@ -1,27 +1,20 @@
+from __future__ import annotations
+
 import argparse
+import contextlib
 import logging
-import os
-from typing import Dict
+from typing import Set
 
-from environ_import.util import find_dotenvs
+from environ_import import __name__ as name
+from environ_import import internal
+from environ_import.watchdog import (
+    DatedFile,
+    generate_files,
+    get_dated_dotenvs,
+    wait_until_change,
+)
 
-POLL_DELAY = 0.1
-
-_log = logging.getLogger("environ_import")
-
-
-def get_files() -> Dict[str, float]:
-    """Get the paths to the dotenv files that should be typed and the timestamp of when they were last modified.
-
-    Returns
-    -------
-    Dict[str, float]
-        A dict of paths and the timestamp of when they were last modified.
-    """
-    return {p: os.stat(p).st_mtime for p in find_dotenvs(True, True)}
-
-
-logging.basicConfig(level=logging.DEBUG)
+_log = logging.getLogger(name)
 
 parser = argparse.ArgumentParser(
     prog="environ_import",
@@ -36,3 +29,18 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+logging.basicConfig(level=logging.INFO)
+internal._should_initialise = False
+
+files: Set[DatedFile] = get_dated_dotenvs()
+
+if args.once:
+    generate_files(files)
+    _log.info("STUB FILES GENERATED!")
+else:
+    with contextlib.suppress(KeyboardInterrupt):
+        _log.info("WATCHDOG WATCHING...")
+        while True:
+            files = wait_until_change(files)
+            generate_files(files)
