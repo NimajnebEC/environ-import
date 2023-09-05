@@ -28,9 +28,16 @@ parser.add_argument(
     help="run the stub generator only once and immediately exit",
 )
 
+parser.add_argument(
+    "-v",
+    "--verbose",
+    action="store_true",
+    help="set log level to DEBUG",
+)
+
 args = parser.parse_args()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
 internal._should_initialise = False
 
 files: Set[DatedFile] = get_dated_dotenvs()
