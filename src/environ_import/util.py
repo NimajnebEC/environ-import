@@ -100,9 +100,9 @@ def find_dotenvs(real: bool = True, example: bool = False) -> List[str]:
     """
     result: List[str] = []
     if real:
-        result.append(find_dotenv())
+        result.append(find_dotenv(usecwd=True))
     if example:
-        result.append(find_dotenv(EXAMPLE_DOTENV))
+        result.append(find_dotenv(EXAMPLE_DOTENV, usecwd=True))
     return [f for f in result if len(f) > 0]
 
 
