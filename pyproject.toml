@@ -8,6 +8,7 @@ readme = "README.md"
 license = "MIT"
 packages = [
     { include = "environ_import", from = "src" },
+    { include = "environ-import", from = "src" },
     { include = "environ", from = "src" },
     { include = "envnull", from = "src" },
 ]
