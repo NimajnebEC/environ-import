@@ -8,9 +8,10 @@ from typing import Dict, Iterable, List, Optional
 from dotenv import dotenv_values, find_dotenv
 
 STUB_EXTENSION = ".pyi"
+EXAMPLE_DOTENV = ".env.example"
 RE_TEMPLATE = re.compile(r"\${(.+)}")
 
-__all__ = ("load_and_generate", "merge_unique")
+__all__ = ("load_and_generate", "merge_unique", "generate_stubs", "find_dotenvs")
 
 _log = logging.getLogger("environ_import")
 
@@ -18,19 +19,35 @@ _log = logging.getLogger("environ_import")
 def load_and_generate() -> None:
     """Load .env files and generate module stubs for typing."""
 
-    vars = {k: v for path in find_dotenvs() for k, v in parse_dotenv(path).items()}
+    vars = parse_dotenvs(find_dotenvs())
 
     # Set Environment Variables
     for k, v in vars.items():
         if k not in os.environ and v is not None:
             os.environ[k] = v
 
-    # Merge with .env.example for typing
-    example = parse_dotenv(find_dotenv(".env.example")).keys()
-    keys = merge_unique(vars.keys(), example)
+    # Merge with example dotenvs for typing
+    examples = parse_dotenvs(find_dotenvs(False, True))
+    keys = merge_unique(vars.keys(), examples.keys())
 
     # Generate Stubs
     generate_stubs(keys)
+
+
+def parse_dotenvs(paths: Iterable[str]) -> Dict[str, Optional[str]]:
+    """Parses and flattens all the dotenvs into a single dictionary.
+
+    Parameters
+    ----------
+    paths : Iterable[str]
+        The dotenvs to parse.
+
+    Returns
+    -------
+    Dict[str, Optional[str]]
+        The merged parse results of the specified dotenvs.
+    """
+    return {k: v for path in paths for k, v in parse_dotenv(path).items()}
 
 
 def parse_dotenv(path: str) -> Dict[str, Optional[str]]:
@@ -58,15 +75,27 @@ def parse_dotenv(path: str) -> Dict[str, Optional[str]]:
         return {}
 
 
-def find_dotenvs() -> List[str]:
-    """Finds the paths to all dotenv files that should be loaded.
+def find_dotenvs(real: bool = True, example: bool = False) -> List[str]:
+    """Finds the paths to all dotenvs that match the filter parameters.
+
+    Parameters
+    ----------
+    real : bool, optional
+        If `True` the path to dotenvs that should be loaded are included, by default `True`
+    example : bool, optional
+        If `True` the path to dotenvs that should only be typed, and not loaded are included, by default `False`
 
     Returns
     -------
     List[str]
-        A list of paths to all dotenv files that should be loaded.
+        The list of dotenvs passing the specified filters.
     """
-    return [find_dotenv()]
+    result: List[str] = []
+    if real:
+        result.append(find_dotenv())
+    if example:
+        result.append(find_dotenv(EXAMPLE_DOTENV))
+    return [f for f in result if len(f) > 0]
 
 
 def generate_stubs(keys: Iterable[str]) -> None:
