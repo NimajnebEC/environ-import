@@ -7,6 +7,8 @@ from typing import Dict, Iterable, List, Optional
 
 from dotenv import dotenv_values, find_dotenv
 
+from environ_import import __name__ as name
+
 STUB_EXTENSION = ".pyi"
 EXAMPLE_DOTENV = ".env.example"
 RE_TEMPLATE = re.compile(r"\${(.+)}")
@@ -19,7 +21,7 @@ __all__ = (
     "find_dotenvs",
 )
 
-_log = logging.getLogger("environ_import")
+_log = logging.getLogger(name)
 
 
 def load_and_generate() -> None:

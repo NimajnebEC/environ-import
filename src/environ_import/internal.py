@@ -6,11 +6,12 @@ import logging
 from os import environ
 from typing import Iterable, List, Optional
 
+from environ_import import __name__ as name
 from environ_import.util import load_and_generate, merge_unique
 
 __all__ = ("environ", "Optional", "List", "initialise", "add_environ")
 
-_log = logging.getLogger("environ_import")
+_log = logging.getLogger(name)
 _should_initialise = True
 
 
