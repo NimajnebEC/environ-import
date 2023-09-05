@@ -1,8 +1,9 @@
 [tool.poetry]
-name = "environ_import"
+name = "environ-import"
 version = "0.1.0"
-description = "A library that allows you to import environment variables like any other module."
+description = "A package that allows you to import environment variables like any other module."
 authors = ["NimajnebEC <nimajnebec@users.noreply.github.com>"]
+repository = "https://github.com/NimajnebEC/environ-import"
 readme = "README.md"
 license = "MIT"
 packages = [
